@@ -27,3 +27,7 @@ test('increment, decrement and reset', async () => {
   await userEvent.click(screen.getByTestId('reset'));
   expect(screen.getByTestId('value')).toHaveTextContent('0');
 });
+<div data-testid="value">{count}</div>
+<button data-testid="increment">+</button>
+<button data-testid="decrement">-</button>
+<button data-testid="reset">Reset</button>
