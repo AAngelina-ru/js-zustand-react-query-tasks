@@ -33,3 +33,14 @@
         "vite": "^6.0.7"
     }
 }
+export default {
+  transform: {
+    '^.+\\.[t|j]sx?$': 'babel-jest',
+  },
+  testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    url: 'http://test.local',
+  },
+  testTimeout: 10000,
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+};
