@@ -33,3 +33,5 @@
         "vite": "^6.0.7"
     }
 }
+npm test
+npm run start
