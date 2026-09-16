@@ -6,3 +6,4 @@ test:
 
 start:
 	npm start
+npm start
