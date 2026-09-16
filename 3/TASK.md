@@ -27,6 +27,21 @@ export const useSettingsStore = create(
   ),
 );
 ```
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+export const useSettingsStore = create(
+  persist(
+    (set) => ({
+      theme: 'light',
+      setTheme: (theme) => set({ theme }),
+    }),
+    {
+      name: 'settings-storage', // ключ в localStorage
+      storage: window.localStorage, // явно указываем localStorage (по умолчанию так и есть)
+    },
+  ),
+);
 
 ## Подсказки
 
