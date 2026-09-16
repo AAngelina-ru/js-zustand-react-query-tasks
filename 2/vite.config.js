@@ -7,3 +7,4 @@ export default defineConfig({
     open: true,
   },
 });
+npm run dev
