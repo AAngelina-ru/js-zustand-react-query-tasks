@@ -33,3 +33,21 @@
         "vite": "^6.0.7"
     }
 }
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
+import App from '../src/components/App.jsx';
+import { counterStore } from '../src/stores/counterStore.js'; // не хук, а сам стор
+
+beforeEach(() => {
+  counterStore.setState({ value: 0 }); // сброс состояния перед каждым тестом
+});
+
+test('increment button increases value', async () => {
+  render(<App />);
+  const button = screen.getByRole('button', { name: /increment/i });
+  await userEvent.click(button);
+  expect(screen.getByText('0')).not.toBeInTheDocument();
+  expect(screen.getByText('1')).toBeInTheDocument();
+});
