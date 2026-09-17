@@ -26,3 +26,13 @@ test('toggles theme and persists to localStorage', async () => {
     expect(raw).toContain('dark');
   });
 });
+// src/stores/settingsStore.js
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+export const useSettingsStore = create(persist((set) => ({
+  theme: 'light',
+  setTheme: (theme) => set({ theme }),
+}), {
+  name: 'settings-storage',
+}));
