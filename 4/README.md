@@ -5,3 +5,7 @@
 Проверка кода: `npm test -s` или `make test`.
 
 Запуск приложения: `npm start` или `make start`.
+"scripts": {
+  "start": "vite",
+  "test": "jest"
+}
