@@ -76,3 +76,6 @@ test('shows an HTTP error while loading user details', async () => {
   await userEvent.click(await screen.findByTestId('user-404'));
   expect(await screen.findByText('Ошибка деталей: HTTP 404')).toBeInTheDocument();
 });
+afterEach(() => {
+  nock.cleanAll();
+});
