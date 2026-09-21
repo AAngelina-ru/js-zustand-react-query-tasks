@@ -43,6 +43,21 @@
 - без выбранного пользователя — `Пользователь не выбран`;
 - при загрузке деталей — `Загрузка...`;
 - при ошибке деталей — `Ошибка деталей: ` и `error.message`.
+export async function request(url, options = {}) {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  return await response.json();
+}
+
+export async function fetchUsers() {
+  return request('/api/users');
+}
+
+export async function fetchUserById(id) {
+  return request(`/api/users/${id}`);
+}
 
 ## Подсказки
 
