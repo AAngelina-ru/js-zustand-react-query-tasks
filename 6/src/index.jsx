@@ -19,3 +19,6 @@ root.render(
     <App />
   </QueryClientProvider>,
 );
+<body>
+  <div id="container"></div>
+</body>
