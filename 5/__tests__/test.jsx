@@ -62,3 +62,29 @@ test('rejects mutation HTTP errors', async () => {
   await expect(createUser({ name: '' })).rejects.toThrow('HTTP 422');
   await expect(deleteUser('1')).rejects.toThrow('HTTP 500');
 });
+import nock from 'nock';
+import { createUser, deleteUser } from '../src/api/users.js';
+
+afterEach(() => {
+  nock.cleanAll();
+});
+
+test('createUser rejects on HTTP 422', async () => {
+  nock('http://localhost')
+    .post('/api/users')
+    .reply(422, { message: 'Invalid user' });
+
+  await expect(createUser({ name: '' })).rejects.toEqual(
+    expect.objectContaining({ status: 422 })
+  );
+});
+
+test('deleteUser rejects on HTTP 500', async () => {
+  nock('http://localhost')
+    .delete('/api/users/1')
+    .reply(500, { message: 'Server error' });
+
+  await expect(deleteUser('1')).rejects.toEqual(
+    expect.objectContaining({ status: 500 })
+  );
+});
