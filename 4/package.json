@@ -37,3 +37,10 @@
         "whatwg-fetch": "^3.6.20"
     }
 }
+"scripts": {
+  "dev": "vite --open",
+  "build": "vite build",
+  "preview": "vite preview",
+  "test": "jest --colors",
+  "test:watch": "jest --watch --colors"
+}
