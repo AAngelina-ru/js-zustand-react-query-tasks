@@ -72,3 +72,90 @@ export default defineConfig({
     open: true,
   },
 });
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+const setupUsersApi = () => {
+  let users = [
+    { id: '1', name: 'Ann' },
+    { id: '2', name: 'Bob' },
+  ]
+  let currentId = users.length
+
+  return async (req, res) => {
+    const url = (req.url ?? '').split('?')[0]
+    const method = req.method ?? 'GET'
+
+    // GET /api/users
+    if (method === 'GET' && url === '/api/users') {
+      res.setHeader('Content-Type', 'application/json')
+      res.writeHead(200)
+      res.end(JSON.stringify(users))
+      return
+    }
+
+    // GET /api/users/:id
+    const userMatch = url.match(/^\/api\/users\/([^/]+)$/)
+    if (method === 'GET' && userMatch) {
+      const user = users.find((item) => item.id === userMatch[1])
+      if (!user) {
+        res.setHeader('Content-Type', 'application/json')
+        res.writeHead(404)
+        res.end(JSON.stringify({ message: 'Not found' }))
+        return
+      }
+      res.setHeader('Content-Type', 'application/json')
+      res.writeHead(200)
+      res.end(JSON.stringify(user))
+      return
+    }
+
+    // POST /api/users
+    if (method === 'POST' && url === '/api/users') {
+      let body = ''
+      req.on('data', chunk => (body += chunk.toString()))
+      req.on('end', () => {
+        try {
+          const { name } = JSON.parse(body)
+          const id = (++currentId).toString()
+          const newUser = { id, name }
+          users.push(newUser)
+          res.setHeader('Content-Type', 'application/json')
+          res.writeHead(201)
+          res.end(JSON.stringify(newUser))
+        } catch (e) {
+          res.setHeader('Content-Type', 'application/json')
+          res.writeHead(400)
+          res.end(JSON.stringify({ message: 'Invalid JSON' }))
+        }
+      })
+      return // важно: не вызывать next(), запрос уже обработан
+    }
+
+    // DELETE /api/users/:id
+    if (method === 'DELETE' && userMatch) {
+      const id = userMatch[1]
+      const initialLength = users.length
+      users = users.filter((user) => user.id !== id)
+      if (users.length === initialLength) {
+        // не удалили (пользователя не было)
+        res.setHeader('Content-Type', 'application/json')
+        res.writeHead(404)
+        res.end(JSON.stringify({ message: 'Not found' }))
+        return
+      }
+      res.setHeader('Content-Type', 'application/json')
+      res.writeHead(200)
+      res.end(JSON.stringify({ message: `User with id ${id} deleted` }))
+      return
+    }
+  }
+}
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    middlewares: [setupUsersApi()],
+    open: true,
+  },
+})
